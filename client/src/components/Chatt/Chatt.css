@@ -18,26 +18,31 @@ span {
 }
 
 body {
-  padding: 20px;
-  background-color: #353535;
+  background-color: #f9f9f9;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
 }
 
-main {
+#root {
   gap: 20px;
   height: 100vh;
   display: grid;
   grid-template-areas:
-    "header header header"
-    "sidebar content .";
-  grid-template-rows: auto 1fr;
-  grid-template-columns: 400px 1000px 1fr;
+    "header header"
+    "sidebar content"
+    "sidebar .";
+  grid-template-rows: auto 600px 1fr;
+  grid-template-columns: 300px 1000px;
+  align-content: start;
+  overflow: hidden;
+  padding: 20px 0;
 }
 
 .main-header {
-  width: 100%;
-  height: 150px;
+  height: 100px;
   grid-area: header;
-  background-color: #db5461;
+  background-color: teal;
 }
 
 .main-header__logo {
@@ -64,7 +69,9 @@ main {
   grid-area: sidebar;
   align-items: center;
   flex-direction: column;
-  background-color: black;
+  background-color: #ccc;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .sidebar > h1 {
@@ -87,9 +94,75 @@ main {
   background-color: green;
 }
 
-.overlay {
-  z-index: 5;
-  position: relative;
+.main-content {
   grid-area: content;
-  background-color: black;
+  display: flex;
+  flex-direction: column;
+  background-color: #ccc;
+  padding: 20px;
+}
+
+.main-content > .chatbox {
+  border: 5px solid black;
+  padding: 10px;
+  flex: 1;
+}
+
+.main-content > input[type="text"] {
+  padding: 10px;
+  outline: none;
+  border: 2px solid teal;
+  background-color: #f9f9f9;
+  margin-top: 5px;
+  font-size: 0.9rem;
+  font-weight: 200;
+  color: black;
+  letter-spacing: 0.5px;
+}
+
+.overlay {
+  display: flex;
+  grid-area: content;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.overlay > label {
+  color: teal;
+  font-weight: 700;
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.overlay > input[type="text"] {
+  padding: 10px;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid #fff;
+  background-color: transparent;
+  width: 30%;
+  font-size: 0.9rem;
+  font-weight: 200;
+  color: #f9f9f9;
+  letter-spacing: 0.5px;
+}
+
+.overlay > button {
+  background-color: tomato;
+  border: none;
+  outline: none;
+  padding: 1em 2em;
+  margin-top: 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  color: black;
+  font-weight: 700;
+}
+
+.overlay > button.disabled {
+  filter: brightness(40%);
+  cursor: not-allowed;
 }

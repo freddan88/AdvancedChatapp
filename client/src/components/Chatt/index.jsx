@@ -8,9 +8,12 @@ const socket = io("http://localhost:3002", {
 });
 
 const Chatt = () => {
-  const [userName, setUserName] = useState();
+  const [userName, setUserName] = useState("");
   const [userCount, setUserCount] = useState(0);
   const [userNames, setUserNames] = useState([]);
+  const [userNameConfirmed, setUserNameConfirmed] = useState(false);
+  const [passedUserNameLenght, setPassedUserNameLenght] = useState(false);
+  const [messageInputValue, setMessageInputValue] = useState("");
 
   socket.on("user name", clients => {
     const clientArray = JSON.parse(clients);
@@ -26,8 +29,15 @@ const Chatt = () => {
   });
 
   const handleUserNameInput = e => {
-    setUserName(e.target.value);
+    const str = e.target.value;
+    if (str.length > 0) {
+      setUserName(str);
+      setPassedUserNameLenght(true);
+    } else {
+      setPassedUserNameLenght(false);
+    }
   };
+
   const handleSubmitUserInput = e => {
     if (e.key === "Enter") {
       submitUserInfo();
@@ -37,6 +47,60 @@ const Chatt = () => {
   const submitUserInfo = () => {
     if (userName && userName.length > 0) {
       socket.emit("user name", userName);
+      setUserNameConfirmed(true);
+    }
+  };
+
+  const handleMessageInput = e => {
+    setMessageInputValue(e.target.value);
+  };
+
+  const handleMessage = e => {
+    if (e.key === "Enter") {
+      const currentUser = e.target.dataset.user;
+      if (messageInputValue.length > 0) {
+        console.log(currentUser);
+        console.log(messageInputValue);
+        setMessageInputValue("");
+      }
+    }
+  };
+
+  const renderContent = () => {
+    if (userNameConfirmed) {
+      return (
+        <section className="main-content">
+          <div className="chatbox"></div>
+          <input
+            type="text"
+            data-user={userName}
+            onKeyPress={handleMessage}
+            onChange={handleMessageInput}
+            placeholder="Enter a message..."
+            value={messageInputValue}
+          />
+        </section>
+      );
+    } else {
+      return (
+        <section className="overlay">
+          <label htmlFor="nick-name">Please enter a username:</label>
+          <input
+            type="text"
+            id="nick-name"
+            placeholder="Your username..."
+            onKeyPress={handleSubmitUserInput}
+            onChange={handleUserNameInput}
+            value={userName}
+          />
+          <button
+            className={passedUserNameLenght ? "" : "disabled"}
+            onClick={submitUserInfo}
+          >
+            Confirm
+          </button>
+        </section>
+      );
     }
   };
 
@@ -44,31 +108,22 @@ const Chatt = () => {
     <Fragment>
       <header className="main-header">
         <figure className="main-header__logo">
-          <img src="https://picsum.photos/200" alt="logo" />
-          <figcaption>ChattApp</figcaption>
+          <img src="https://picsum.photos/100" alt="logo" />
+          <figcaption>ChatApp</figcaption>
         </figure>
       </header>
-      <main>
-        <aside className="sidebar">
-          <h1>Connected Clients: {userCount}</h1>
-          {_.map(userNames, (obj, index) => {
-            return (
-              <div key={index} className="user-indicator">
-                <div className="user-status" />
-                <span>{obj.name}</span>
-              </div>
-            );
-          })}
-        </aside>
-        <section className="overlay">
-          <input
-            type="text"
-            onChange={handleUserNameInput}
-            onKeyPress={handleSubmitUserInput}
-          />
-          <button onClick={submitUserInfo}>Confirm</button>
-        </section>
-      </main>
+      <aside className="sidebar">
+        <h1>Connected Clients: {userCount}</h1>
+        {_.map(userNames, (obj, index) => {
+          return (
+            <div key={index} className="user-indicator">
+              <div className="user-status" />
+              <span>{obj.name}</span>
+            </div>
+          );
+        })}
+      </aside>
+      {renderContent()}
     </Fragment>
   );
 };
