@@ -1,4 +1,4 @@
-# AdvancedChatapp_01
+# AdvancedChatapp
 
 ## Install this project on your local computer
 
