@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, Fragment } from "react";
+import React, { useState, useRef, Fragment } from "react";
 import io from "socket.io-client";
 import _ from "lodash";
 import "./Chatt.css";
@@ -14,6 +14,20 @@ const Chatt = () => {
   const [userNameConfirmed, setUserNameConfirmed] = useState(false);
   const [passedUserNameLenght, setPassedUserNameLenght] = useState(false);
   const [messageInputValue, setMessageInputValue] = useState("");
+  const [messages, setMessages] = useState([]);
+  const chatBox = useRef(null);
+
+  socket.on("chat message", message => {
+    setMessages([...messages, message]);
+    if (chatBox.current) {
+      const messageInput = chatBox.current.nextElementSibling;
+      const lastMessage = chatBox.current.lastElementChild;
+      messageInput.removeAttribute("disabled");
+      lastMessage.scrollIntoView({
+        behavior: "smooth"
+      });
+    }
+  });
 
   socket.on("user name", clients => {
     const clientArray = JSON.parse(clients);
@@ -59,9 +73,12 @@ const Chatt = () => {
     if (e.key === "Enter") {
       const currentUser = e.target.dataset.user;
       if (messageInputValue.length > 0) {
-        console.log(currentUser);
-        console.log(messageInputValue);
+        socket.emit("chat message", { currentUser, messageInputValue });
         setMessageInputValue("");
+      }
+      if (chatBox.current) {
+        const messageInput = chatBox.current.nextElementSibling;
+        messageInput.setAttribute("disabled", "");
       }
     }
   };
@@ -70,7 +87,15 @@ const Chatt = () => {
     if (userNameConfirmed) {
       return (
         <section className="main-content">
-          <div className="chatbox"></div>
+          <div className="chatbox" ref={chatBox}>
+            {_.map(messages, (obj, index) => {
+              return (
+                <p key={index}>
+                  {obj.currentUser}: {obj.messageInputValue}
+                </p>
+              );
+            })}
+          </div>
           <input
             type="text"
             data-user={userName}
