@@ -6,7 +6,7 @@ const moment = require("moment");
 
 const app = express();
 const server = http.createServer(app);
-const io = socketio(server);
+const io = socketio(server, { wsEngine: "ws" });
 
 app.use(express.static(path.join(__dirname, "client/build")));
 const isDevelopment = process.env.npm_lifecycle_event === "devstart";
