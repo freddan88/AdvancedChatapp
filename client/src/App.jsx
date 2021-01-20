@@ -3,11 +3,12 @@ import io from "socket.io-client";
 import _ from "lodash";
 import "./App.css";
 
-const isDevelopment = process.env.NODE_ENV === "development";
-const socketPort = isDevelopment ? 3001 : 3729;
-const socket = io(`http://localhost:${socketPort}`, {
-  transports: ["websocket", "polling", "flashsocket"],
-});
+// const isDevelopment = process.env.NODE_ENV === "development";
+// const socketPort = isDevelopment ? 3001 : 3729;
+// const socket = io(`http://localhost:${socketPort}`, {
+//   transports: ["websocket", "polling", "flashsocket"],
+// });
+const socket = io();
 
 const App = () => {
   const [userName, setUserName] = useState("");
