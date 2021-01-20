@@ -9,8 +9,9 @@ const server = http.createServer(app);
 const io = socketio(server, { wsEngine: "ws" });
 
 app.use(express.static(path.join(__dirname, "client/build")));
-const isDevelopment = process.env.npm_lifecycle_event === "devstart";
-const PORT = isDevelopment ? 3001 : 80;
+// const isDevelopment = process.env.npm_lifecycle_event === "devstart";
+// const PORT = isDevelopment ? 3001 : 80;
+const PORT = 80;
 let usersArray = [];
 
 io.on("connection", (socket) => {
