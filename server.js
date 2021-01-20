@@ -11,7 +11,7 @@ const io = socketio(server, { wsEngine: "ws" });
 app.use("/", express.static(path.join(__dirname, "client/build")));
 // const isDevelopment = process.env.npm_lifecycle_event === "devstart";
 // const PORT = isDevelopment ? 3001 : 80;
-const PORT = 80;
+const PORT = process.env.PORT || 3001;
 let usersArray = [];
 
 io.on("connection", (socket) => {
