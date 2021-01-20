@@ -11,7 +11,6 @@ const socket = io(`http://localhost:${socketPort}`, {
 
 const App = () => {
   const [userName, setUserName] = useState("");
-  const [userCount, setUserCount] = useState(0);
   const [userNames, setUserNames] = useState([]);
   const [userNameConfirmed, setUserNameConfirmed] = useState(false);
   const [passedUserNameLenght, setPassedUserNameLenght] = useState(false);
@@ -38,10 +37,6 @@ const App = () => {
 
   socket.on("disconnect", (name) => {
     setUserNames(userNames.filter((obj) => obj.name !== name));
-  });
-
-  socket.on("online", (count) => {
-    setUserCount(count);
   });
 
   const handleUserNameInput = (e) => {
@@ -91,10 +86,16 @@ const App = () => {
         <section className="main-content">
           <div className="chatbox" ref={chatBox}>
             {_.map(messages, (obj, index) => {
+              const isMine = obj.currentUser === userName;
+              const msgClass = isMine ? "mine" : "other";
               return (
-                <p key={index}>
-                  {obj.currentUser}: {obj.messageInputValue}
-                </p>
+                <article key={index} className={`message ${msgClass}`}>
+                  <header>
+                    <span>{obj.currentUser}</span>
+                    <time dateTime={obj.time}>{obj.time}</time>
+                  </header>
+                  <p>{obj.messageInputValue}</p>
+                </article>
               );
             })}
           </div>
@@ -140,7 +141,7 @@ const App = () => {
         </figure>
       </header>
       <aside className="sidebar">
-        <h1>Connected Clients: {userCount}</h1>
+        <h1>Connected Clients: {userNames.length}</h1>
         {_.map(userNames, (obj, index) => {
           return (
             <div key={index} className="user-indicator">

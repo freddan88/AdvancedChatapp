@@ -10,10 +10,8 @@ img {
   display: block;
 }
 
-p,
 h1,
-h2,
-span {
+h2 {
   color: white;
 }
 
@@ -108,6 +106,8 @@ body {
   overflow-y: auto;
   padding: 10px;
   flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .main-content > input[type="text"] {
@@ -172,4 +172,34 @@ body {
 .overlay > button.disabled {
   filter: brightness(40%);
   cursor: not-allowed;
+}
+
+article.message {
+  border-radius: 10px;
+  padding: 10px;
+  width: 90%;
+}
+
+article.message:not(:first-child) {
+  margin-top: 10px;
+}
+
+article.message.mine {
+  align-self: flex-end;
+  background-color: #6495ed;
+  color: white;
+}
+
+article.message.other {
+  align-self: flex-start;
+  background-color: #8a95aa;
+  color: black;
+}
+
+article.message header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 5px;
+  filter: brightness(80%);
 }
