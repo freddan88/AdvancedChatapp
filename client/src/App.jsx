@@ -4,7 +4,7 @@ import _ from "lodash";
 import "./App.css";
 
 const isDevelopment = process.env.NODE_ENV === "development";
-const socketPort = isDevelopment ? 3001 : 80;
+const socketPort = isDevelopment ? 3001 : 3729;
 const socket = io(`http://localhost:${socketPort}`, {
   transports: ["websocket", "polling", "flashsocket"],
 });
